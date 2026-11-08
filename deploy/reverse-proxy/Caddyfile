@@ -1,0 +1,4 @@
+# Pocket Jobs behind Caddy.
+jobs.example.com {
+	reverse_proxy pocket-jobs:8080
+}
