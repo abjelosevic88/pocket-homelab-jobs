@@ -28,7 +28,7 @@ jobs:
           curl -fsS http://localhost:8080/healthz
           curl -fsS http://localhost:8080/api/v1/summary | grep -q '"open"'
           curl -fsS 'http://localhost:8080/api/v1/jobs?status=open' | grep -q '"stage_name"'
-          curl -fsS 'http://localhost:8080/api/v1/search?q=shop' | grep -q 'shop'
+          curl -fsS 'http://localhost:8080/api/v1/search?q=Payments' | grep -q 'Northwind'
           curl -fsS http://localhost:8080/ | grep -q '<div id="root">'
   docker:
     runs-on: ubuntu-latest
