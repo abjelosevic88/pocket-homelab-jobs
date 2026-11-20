@@ -21,6 +21,19 @@ var linkOffers = []core.Offer{
 	{Scope: "jobs:write", Name: "Add jobs and notes to your search", Description: "Save a job for you (a posting from an email, a link you share), add an interview someone invited you to, and add a line to a job's timeline. It may change only the jobs that app added itself."},
 }
 
+// portable is what Pocket Move may copy out and bring in for a person
+// (docs/move.md in pocket-homelab-core); Register adds move:export/import.
+var portable = &core.Portable{
+	Exports: []core.PortableExport{
+		{Path: "/api/v1/export.json", File: "jobs.json", Kind: core.KindPocket, Title: "Your job search: stages, jobs with their timelines, interviews and offers, your CVs and letters (text)"},
+		{Path: "/api/v1/export.csv", File: "jobs.csv", Kind: core.KindCSV, Title: "Every job as one row of a table"},
+	},
+	Imports: []core.PortableImport{
+		{Path: "/api/v1/import", Kind: core.KindPocket, Form: "file", Title: "Adds the jobs, interviews, offers and papers from another box; jobs you already have are left alone"},
+		{Path: "/api/v1/import", Kind: core.KindCSV, Form: "file", Title: "Adds jobs from a CSV (Huntr, Teal, a spreadsheet); rows already brought in are skipped"},
+	},
+}
+
 type linkRoute struct {
 	methods string
 	path    *regexp.Regexp
@@ -41,6 +54,9 @@ var errLinkScope = errors.New("outside the link's scope")
 
 // linkAllows reports whether a link token with these scopes may make this request.
 func linkAllows(scopes []string, r *http.Request) bool {
+	if portable.LinkAllows(scopes, r) {
+		return true
+	}
 	for _, lr := range linkRoutes {
 		if !strings.Contains(" "+lr.methods+" ", " "+r.Method+" ") || !lr.path.MatchString(r.URL.Path) {
 			continue

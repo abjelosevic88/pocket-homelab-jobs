@@ -46,3 +46,5 @@ in the currency's units, and you send those (`{"min_amount": 50000}`). Days are 
 ## Data
 
 `GET /export.json`, `GET /export.csv`, `POST /import` (a Pocket Jobs export or a CSV — multipart `file` or the raw body), `GET /backup` (admins).
+
+Pocket Move can copy your job search out and bring jobs in: `GET /pocket/portable` describes the exports (link scope `move:export`) and the imports (`move:import`). Imports only add; a second run of the same file adds nothing.
